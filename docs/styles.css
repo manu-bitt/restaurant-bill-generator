@@ -156,9 +156,8 @@ body {
 }
 
 .menu-item-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-    border-color: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .menu-item-card h3 {
@@ -825,4 +824,29 @@ tr:hover {
 
 .app-footer p {
     margin: 0;
+}
+
+.no-items-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    width: 100%;
+    background-color: var(--bg-light);
+    border-radius: 8px;
+    border: 1px dashed var(--border-color);
+    margin: 20px 0;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.no-items-message p {
+    margin: 8px 0;
+    font-size: 18px;
+}
+
+.no-items-message .sub-message {
+    font-size: 14px;
+    color: var(--accent-color);
 } 

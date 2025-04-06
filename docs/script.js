@@ -242,6 +242,28 @@ function populateMenuItems() {
         item.name.toLowerCase().includes(searchTerm)
     );
     
+    // Check if there are no items to display
+    if (filteredItems.length === 0) {
+        const noItemsMessage = document.createElement('div');
+        noItemsMessage.className = 'no-items-message';
+        
+        if (searchTerm) {
+            // If search term is present but no results found
+            noItemsMessage.innerHTML = `
+                <p>No items found matching "${searchTerm}"</p>
+            `;
+        } else {
+            // If no menu items exist at all
+            noItemsMessage.innerHTML = `
+                <p>No menu items available</p>
+                <p class="sub-message">Click 'Manage Menu' to add your first item</p>
+            `;
+        }
+        
+        menuItemsContainer.appendChild(noItemsMessage);
+        return;
+    }
+    
     filteredItems.forEach(item => {
         const card = document.createElement('div');
         card.className = 'menu-item-card';
