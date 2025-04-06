@@ -1,0 +1,506 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+/* App Container */
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.app-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #4a4a4a;
+}
+
+.app-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Menu Section */
+.menu-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    flex-grow: 1;
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.manage-menu-btn {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.manage-menu-btn:hover {
+    background-color: #3a80d2;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.menu-item-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.menu-item-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item-card h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.menu-item-card p {
+    color: #666;
+}
+
+.menu-item-card .pizza-prices {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.menu-item-card .pizza-prices span {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.menu-item-card.is-pizza {
+    border-color: #1976d2;
+    background-color: #f8f9fa;
+}
+
+.menu-item-card.is-pizza:hover {
+    background-color: #e3f2fd;
+}
+
+/* Bill Section */
+.bill-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.bill-table {
+    width: 100%;
+    margin: 20px 0;
+    border-radius: 4px;
+    overflow: hidden;
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: #f2f2f2;
+    padding: 12px;
+    text-align: left;
+    font-weight: 500;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+}
+
+.qty-btn {
+    width: 24px;
+    height: 24px;
+    background-color: #f2f2f2;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.qty-btn:hover {
+    background-color: #e2e2e2;
+}
+
+.item-quantity {
+    margin: 0 8px;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+}
+
+.delete-btn:hover {
+    color: #c82333;
+}
+
+.discount-section {
+    margin: 20px 0;
+}
+
+.discount-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+    font-size: 14px;
+}
+
+.bill-summary {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.summary-row.total {
+    font-weight: 600;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.summary-divider {
+    height: 1px;
+    background-color: #ddd;
+    margin: 10px 0;
+}
+
+.bill-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.action-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex: 1;
+    margin: 0 5px;
+}
+
+.action-btn:first-child {
+    margin-left: 0;
+}
+
+.action-btn:last-child {
+    margin-right: 0;
+}
+
+.action-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.print-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.print-btn:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+.pdf-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.pdf-btn:hover:not(:disabled) {
+    background-color: #c82333;
+}
+
+.action-btn:not(.print-btn):not(.pdf-btn) {
+    background-color: #6c757d;
+    color: white;
+}
+
+.action-btn:not(.print-btn):not(.pdf-btn):hover {
+    background-color: #5a6268;
+}
+
+/* Dialog Styles */
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.dialog {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.dialog h2 {
+    margin-bottom: 1.5rem;
+}
+
+.size-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.size-option {
+    padding: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.2s;
+}
+
+.size-option.selected {
+    border-color: #1976d2;
+}
+
+.size-option:hover {
+    border-color: #1976d2;
+}
+
+.price-info {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.close-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.close-btn:hover {
+    background-color: #5a6268;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Menu Management Styles */
+.add-item-section {
+    margin-bottom: 20px;
+}
+
+.price-inputs {
+    margin: 10px 0;
+}
+
+#pizzaPriceInputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#regularPriceInput {
+    display: block;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.checkbox-label input {
+    margin-right: 8px;
+}
+
+.add-item-btn {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+.add-item-btn:hover {
+    background-color: #3a80d2;
+}
+
+.custom-items-list {
+    margin-bottom: 20px;
+}
+
+.custom-items-list h3 {
+    margin-bottom: 10px;
+}
+
+.custom-menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid #eee;
+}
+
+.item-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-name {
+    font-weight: 500;
+}
+
+.item-price {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.item-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .app-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .app-container {
+        padding: 1rem;
+    }
+    
+    .app-title {
+        font-size: 2rem;
+    }
+    
+    .dialog {
+        min-width: 300px;
+        padding: 1.5rem;
+    }
+    
+    .size-options {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pizza-prices {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.pizza-prices span {
+    background-color: #f0f0f0;
+    padding: 2px 8px;
+    border-radius: 4px;
+} 
