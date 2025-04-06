@@ -479,19 +479,15 @@ function updateBillSummary() {
         return total + (item.price * item.quantity);
     }, 0);
     
-    // Calculate service charge (10%)
-    const serviceCharge = subtotal * 0.1;
-    
     // Calculate discount
     const discountPercent = parseFloat(discountPercentInput.value) || 0;
     const discount = subtotal * (discountPercent / 100);
     
     // Calculate grand total
-    const grandTotal = subtotal + serviceCharge - discount;
+    const grandTotal = subtotal - discount;
     
     // Update UI
     subtotalElement.textContent = `₹${subtotal.toFixed(2)}`;
-    serviceChargeElement.textContent = `₹${serviceCharge.toFixed(2)}`;
     discountElement.textContent = `₹${discount.toFixed(2)}`;
     grandTotalElement.textContent = `₹${grandTotal.toFixed(2)}`;
 }
@@ -517,7 +513,7 @@ function printBill() {
         <div style="margin-bottom: 20px; border-bottom: 1px solid #000; padding-bottom: 10px;">
             <p style="text-align: center; font-size: 20px; margin: 5px 0; font-weight: bold;">Restaurant Bill Generator</p>
             <p style="text-align: center; font-size: 12px; margin: 5px 0;">123 Food Street, Tasty Town</p>
-            <p style="text-align: center; font-size: 12px; margin: 5px 0;">Tel: +91 98765 43210 | GST: ABCDE1234F</p>
+            <p style="text-align: center; font-size: 12px; margin: 5px 0;">Tel: +91 98765 43210</p>
             <p style="text-align: center; font-size: 14px; margin: 10px 0; font-weight: bold;">${billNumber} | ${tableNumber}</p>
         </div>
     `;
@@ -731,18 +727,13 @@ function downloadPdf() {
     const subtotal = billItems.reduce((total, item) => {
         return total + (item.price * item.quantity);
     }, 0);
-    const serviceCharge = subtotal * 0.1;
     const discountPercent = parseFloat(discountPercentInput.value) || 0;
     const discount = subtotal * (discountPercent / 100);
-    const grandTotal = subtotal + serviceCharge - discount;
+    const grandTotal = subtotal - discount;
     
     // Add summary
     doc.text("Subtotal:", 120, yPos);
     doc.text(`₹${subtotal.toFixed(2)}`, 160, yPos);
-    yPos += 8;
-    
-    doc.text("Service Charge (10%):", 120, yPos);
-    doc.text(`₹${serviceCharge.toFixed(2)}`, 160, yPos);
     yPos += 8;
     
     if (discount > 0) {
