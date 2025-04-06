@@ -1,4 +1,4 @@
-const CACHE_NAME = 'restaurant-bill-generator-v1';
+const CACHE_NAME = 'restaurant-bill-generator-v2';
 const urlsToCache = [
   './',
   './index.html',
