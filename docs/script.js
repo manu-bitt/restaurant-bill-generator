@@ -512,7 +512,7 @@ function printBill() {
     
     // Create a temporary bill header
     const tempHeader = document.createElement('div');
-    tempHeader.className = 'print-only-header';
+    tempHeader.className = 'print-only-header print-centered';
     tempHeader.innerHTML = `
         <div style="margin-bottom: 20px; border-bottom: 1px solid #000; padding-bottom: 10px;">
             <p style="text-align: center; font-size: 20px; margin: 5px 0; font-weight: bold;">Restaurant Bill Generator</p>
@@ -532,10 +532,28 @@ function printBill() {
         <p style="margin: 5px 0; text-align: center; font-weight: bold;">Date: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}</p>
     `;
     
+    // Center the app container and bill container
+    const appContainer = document.querySelector('.app-container');
+    const billContainer = document.querySelector('.bill-container');
+    const originalAppContainerStyle = appContainer.getAttribute('style') || '';
+    const originalBillContainerStyle = billContainer.getAttribute('style') || '';
+    
+    appContainer.style.margin = '0 auto';
+    appContainer.style.width = '80%';
+    billContainer.style.margin = '0 auto';
+    billContainer.style.width = '100%';
+    
     // Style the bill items table
     const billTable = document.querySelector('.bill-table table');
     billTable.style.width = '100%';
     billTable.style.borderCollapse = 'collapse';
+    billTable.style.margin = '0 auto';
+    
+    // Center the bill table container
+    const billTableContainer = document.querySelector('.bill-table');
+    const originalBillTableStyle = billTableContainer.getAttribute('style') || '';
+    billTableContainer.style.margin = '20px auto';
+    billTableContainer.style.width = '100%';
     
     // Add headers to the bill items table if not already present
     if (!billTable.querySelector('thead')) {
@@ -567,7 +585,7 @@ function printBill() {
     
     // Create a temporary bill footer
     const tempFooter = document.createElement('div');
-    tempFooter.className = 'print-only-footer';
+    tempFooter.className = 'print-only-footer print-centered';
     tempFooter.innerHTML = `
         <div style="margin-top: 30px; border-top: 1px dashed #000; padding-top: 10px; text-align: center;">
             <p style="font-size: 14px; margin: 5px 0; font-weight: bold;">Thank you for dining with us!</p>
@@ -576,8 +594,20 @@ function printBill() {
         </div>
     `;
     
+    // Style the bill summary
+    const billSummary = document.querySelector('.bill-summary');
+    const originalBillSummaryStyle = billSummary.getAttribute('style') || '';
+    billSummary.style.textAlign = 'right';
+    billSummary.style.marginTop = '20px';
+    billSummary.style.paddingTop = '10px';
+    billSummary.style.borderTop = '1px dashed #000';
+    
+    // Make the bill title and date centered
+    const appTitle = document.querySelector('.app-title');
+    const originalTitleStyle = appTitle.getAttribute('style') || '';
+    appTitle.style.textAlign = 'center';
+    
     // Temporarily append header and footer to the bill container
-    const billContainer = document.querySelector('.bill-container');
     billContainer.insertBefore(tempHeader, billContainer.firstChild);
     billContainer.appendChild(tempFooter);
     
@@ -595,6 +625,13 @@ function printBill() {
         // Restore the original state
         document.title = originalTitle;
         billDateElement.innerHTML = originalDateContent;
+        
+        // Restore original styles
+        appContainer.setAttribute('style', originalAppContainerStyle);
+        billContainer.setAttribute('style', originalBillContainerStyle);
+        billTableContainer.setAttribute('style', originalBillTableStyle);
+        billSummary.setAttribute('style', originalBillSummaryStyle);
+        appTitle.setAttribute('style', originalTitleStyle);
         
         // If thead was added, remove it
         const addedThead = billTable.querySelector('thead');
