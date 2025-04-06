@@ -9,7 +9,6 @@ const itemSearch = document.getElementById('itemSearch');
 const menuItemsContainer = document.getElementById('menuItemsContainer');
 const billItemsContainer = document.getElementById('billItems');
 const subtotalElement = document.getElementById('subtotal');
-const serviceChargeElement = document.getElementById('serviceCharge');
 const discountPercentInput = document.getElementById('discountPercent');
 const discountElement = document.getElementById('discount');
 const grandTotalElement = document.getElementById('grandTotal');
