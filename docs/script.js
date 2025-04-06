@@ -401,7 +401,54 @@ function printBill() {
         return;
     }
     
+    // Add the bill number and table number
+    const billNumber = `Bill #${Math.floor(Math.random() * 10000)}`;
+    const tableNumber = `Table #${Math.floor(Math.random() * 100)}`;
+    
+    // Store original title
+    const originalTitle = document.title;
+    
+    // Create a temporary bill header
+    const tempHeader = document.createElement('div');
+    tempHeader.className = 'print-only-header';
+    tempHeader.innerHTML = `
+        <p style="text-align: center; font-size: 12px; margin: 5px 0;">${billNumber} | ${tableNumber}</p>
+    `;
+    
+    // Find the bill date element
+    const billDateElement = document.getElementById('bill-date');
+    const originalDateContent = billDateElement.innerHTML;
+    
+    // Update bill date with additional info
+    billDateElement.innerHTML = `
+        <p>${originalDateContent}</p>
+        <p style="text-align: center; font-size: 12px; margin: 5px 0;">${billNumber} | ${tableNumber}</p>
+    `;
+    
+    // Create a temporary bill footer
+    const tempFooter = document.createElement('div');
+    tempFooter.className = 'print-only-footer';
+    tempFooter.innerHTML = `
+        <p style="text-align: center; font-size: 12px; margin-top: 20px;">Thank you for dining with us!</p>
+        <p style="text-align: center; font-size: 10px;">Visit us again soon!</p>
+    `;
+    
+    // Temporarily append header and footer to the bill container
+    const billContainer = document.querySelector('.bill-container');
+    billContainer.insertBefore(tempHeader, billContainer.firstChild);
+    billContainer.appendChild(tempFooter);
+    
+    // Change document title to include bill number
+    document.title = `Bill #${Math.floor(Math.random() * 10000)}`;
+    
+    // Print the document
     window.print();
+    
+    // Restore the original state
+    document.title = originalTitle;
+    billDateElement.innerHTML = originalDateContent;
+    billContainer.removeChild(tempHeader);
+    billContainer.removeChild(tempFooter);
 }
 
 // Download bill as PDF
@@ -414,44 +461,66 @@ function downloadPdf() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     
+    // Generate random bill number and table number
+    const billNumber = `Bill #${Math.floor(Math.random() * 10000)}`;
+    const tableNumber = `Table #${Math.floor(Math.random() * 100)}`;
+    
     // Add restaurant info
     doc.setFontSize(18);
     doc.text("Restaurant Bill Generator", 105, 20, { align: "center" });
     
-    doc.setFontSize(12);
-    doc.text("123 Food Street, Tasty Town", 105, 30, { align: "center" });
-    doc.text("Tel: +91 98765 43210", 105, 37, { align: "center" });
-    doc.text(`Date: ${new Date().toLocaleString()}`, 105, 44, { align: "center" });
+    doc.setFontSize(10);
+    doc.text("123 Food Street, Tasty Town", 105, 28, { align: "center" });
+    doc.text("Tel: +91 98765 43210", 105, 33, { align: "center" });
+    
+    // Add bill information
+    doc.setFontSize(11);
+    doc.text(`${billNumber} | ${tableNumber}`, 105, 40, { align: "center" });
+    doc.text(`Date: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 105, 45, { align: "center" });
+    
+    // Add separator line
+    doc.line(20, 50, 190, 50);
     
     // Add bill items
-    doc.setFontSize(14);
-    doc.text("Bill Details", 20, 55);
-    
     doc.setFontSize(10);
-    doc.text("Item", 20, 65);
-    doc.text("Price", 100, 65);
-    doc.text("Qty", 130, 65);
-    doc.text("Total", 160, 65);
+    doc.text("Item", 25, 58);
+    doc.text("Qty", 120, 58);
+    doc.text("Price", 140, 58);
+    doc.text("Total", 160, 58);
     
-    let yPos = 75;
+    // Add separator line
+    doc.line(20, 60, 190, 60);
+    
+    let yPos = 68;
     
     billItems.forEach(item => {
-        doc.text(item.name, 20, yPos);
-        doc.text(`₹${item.price.toFixed(2)}`, 100, yPos);
-        doc.text(item.quantity.toString(), 130, yPos);
+        // Truncate long item names
+        let displayName = item.name;
+        if (displayName.length > 30) {
+            displayName = displayName.substring(0, 27) + "...";
+        }
+        
+        doc.text(displayName, 25, yPos);
+        doc.text(item.quantity.toString(), 120, yPos);
+        doc.text(`₹${item.price.toFixed(2)}`, 140, yPos);
         doc.text(`₹${(item.price * item.quantity).toFixed(2)}`, 160, yPos);
-        yPos += 10;
+        yPos += 8;
     });
     
+    // Add separator line
+    doc.line(20, yPos, 190, yPos);
+    yPos += 8;
+    
+    // Calculate values
+    const subtotal = billItems.reduce((total, item) => {
+        return total + (item.price * item.quantity);
+    }, 0);
+    const serviceCharge = subtotal * 0.1;
+    const discountPercent = parseFloat(discountPercentInput.value) || 0;
+    const discount = subtotal * (discountPercent / 100);
+    const grandTotal = subtotal + serviceCharge - discount;
+    
     // Add summary
-    yPos += 10;
-    doc.line(20, yPos - 5, 190, yPos - 5);
-    
-    const subtotal = parseFloat(subtotalElement.textContent.replace('₹', ''));
-    const serviceCharge = parseFloat(serviceChargeElement.textContent.replace('₹', ''));
-    const discount = parseFloat(discountElement.textContent.replace('₹', ''));
-    const grandTotal = parseFloat(grandTotalElement.textContent.replace('₹', ''));
-    
     doc.text("Subtotal:", 120, yPos);
     doc.text(`₹${subtotal.toFixed(2)}`, 160, yPos);
     yPos += 8;
@@ -460,24 +529,31 @@ function downloadPdf() {
     doc.text(`₹${serviceCharge.toFixed(2)}`, 160, yPos);
     yPos += 8;
     
-    doc.text("Discount:", 120, yPos);
-    doc.text(`₹${discount.toFixed(2)}`, 160, yPos);
+    if (discount > 0) {
+        doc.text(`Discount (${discountPercent}%):`, 120, yPos);
+        doc.text(`₹${discount.toFixed(2)}`, 160, yPos);
+        yPos += 8;
+    }
+    
+    // Add separator line
+    doc.line(120, yPos, 190, yPos);
     yPos += 8;
     
-    doc.line(120, yPos, 190, yPos);
-    yPos += 5;
-    
+    // Add total
     doc.setFont(undefined, 'bold');
-    doc.text("TOTAL:", 120, yPos + 5);
-    doc.text(`₹${grandTotal.toFixed(2)}`, 160, yPos + 5);
+    doc.text("TOTAL:", 120, yPos);
+    doc.text(`₹${grandTotal.toFixed(2)}`, 160, yPos);
     
     // Add thank you message
     doc.setFont(undefined, 'normal');
     doc.setFontSize(12);
     doc.text("Thank you for dining with us!", 105, yPos + 20, { align: "center" });
+    doc.setFontSize(10);
+    doc.text("Visit us again soon!", 105, yPos + 28, { align: "center" });
     
-    // Save PDF
-    doc.save("Restaurant_Bill.pdf");
+    // Save PDF with a unique name that includes the bill number
+    const billNumberClean = billNumber.replace(/\s+/g, '_').replace(/#/g, '');
+    doc.save(`Restaurant_Bill_${billNumberClean}.pdf`);
 }
 
 // Reset bill

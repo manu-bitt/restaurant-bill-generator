@@ -503,4 +503,89 @@ td {
     background-color: #f0f0f0;
     padding: 2px 8px;
     border-radius: 4px;
+}
+
+/* Add print styles at the end of the CSS file */
+@media print {
+    /* Hide elements not needed for printing */
+    .menu-container,
+    .menu-header,
+    .manage-menu-btn,
+    .bill-actions,
+    .dialog-overlay,
+    .search-input,
+    .app-content {
+        display: none !important;
+    }
+    
+    /* Reset grid layout for printing */
+    .app-container {
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    
+    /* Center the bill title */
+    .app-title {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    
+    /* Format the bill container for printing */
+    .bill-container {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        width: 100%;
+        margin: 0 auto;
+        max-width: 500px;
+    }
+    
+    /* Format the bill date */
+    #bill-date {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    
+    /* Add a separator line */
+    .bill-container::after {
+        content: "";
+        display: block;
+        border-bottom: 1px dashed #000;
+        margin: 15px 0;
+    }
+    
+    /* Format the table for printing */
+    .bill-table {
+        margin: 20px 0;
+        width: 100%;
+    }
+    
+    /* Hide delete buttons */
+    .delete-btn {
+        display: none;
+    }
+    
+    /* Hide quantity controls, just show the quantity number */
+    .quantity-controls .qty-btn {
+        display: none;
+    }
+    
+    /* Format the bill summary for printing */
+    .bill-summary {
+        margin-top: 20px;
+        border-top: 1px dashed #000;
+        padding-top: 10px;
+    }
+    
+    /* Show only the relevant parts of the bill */
+    body::after {
+        content: "Thank you for dining with us!";
+        display: block;
+        text-align: center;
+        margin-top: 30px;
+        font-style: italic;
+    }
 } 
