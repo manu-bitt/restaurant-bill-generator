@@ -514,10 +514,12 @@ function printBill() {
     const tempHeader = document.createElement('div');
     tempHeader.className = 'print-only-header';
     tempHeader.innerHTML = `
-        <p style="text-align: center; font-size: 18px; margin: 5px 0; font-weight: bold;">Restaurant Bill</p>
-        <p style="text-align: center; font-size: 12px; margin: 5px 0;">123 Food Street, Tasty Town</p>
-        <p style="text-align: center; font-size: 12px; margin: 5px 0;">Tel: +91 98765 43210</p>
-        <p style="text-align: center; font-size: 12px; margin: 5px 0;">${billNumber} | ${tableNumber}</p>
+        <div style="margin-bottom: 20px; border-bottom: 1px solid #000; padding-bottom: 10px;">
+            <p style="text-align: center; font-size: 20px; margin: 5px 0; font-weight: bold;">Restaurant Bill Generator</p>
+            <p style="text-align: center; font-size: 12px; margin: 5px 0;">123 Food Street, Tasty Town</p>
+            <p style="text-align: center; font-size: 12px; margin: 5px 0;">Tel: +91 98765 43210 | GST: ABCDE1234F</p>
+            <p style="text-align: center; font-size: 14px; margin: 10px 0; font-weight: bold;">${billNumber} | ${tableNumber}</p>
+        </div>
     `;
     
     // Find the bill date element
@@ -527,15 +529,51 @@ function printBill() {
     // Update bill date with additional info
     const now = new Date();
     billDateElement.innerHTML = `
-        <p style="margin: 5px 0; text-align: center;">Date: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}</p>
+        <p style="margin: 5px 0; text-align: center; font-weight: bold;">Date: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}</p>
     `;
+    
+    // Style the bill items table
+    const billTable = document.querySelector('.bill-table table');
+    billTable.style.width = '100%';
+    billTable.style.borderCollapse = 'collapse';
+    
+    // Add headers to the bill items table if not already present
+    if (!billTable.querySelector('thead')) {
+        const thead = document.createElement('thead');
+        thead.innerHTML = `
+            <tr style="border-bottom: 1px solid #000;">
+                <th style="text-align: left; padding: 8px;">Item</th>
+                <th style="text-align: right; padding: 8px;">Price</th>
+                <th style="text-align: center; padding: 8px;">Qty</th>
+                <th style="text-align: right; padding: 8px;">Total</th>
+            </tr>
+        `;
+        billTable.insertBefore(thead, billTable.firstChild);
+    }
+    
+    // Style the quantity cells to ensure they show properly
+    const quantityCells = billTable.querySelectorAll('.quantity-controls');
+    quantityCells.forEach(cell => {
+        const quantity = cell.querySelector('.item-quantity').textContent;
+        cell.innerHTML = quantity;
+        cell.style.textAlign = 'center';
+    });
+    
+    // Style the total cells
+    const totalCells = billTable.querySelectorAll('.item-total');
+    totalCells.forEach(cell => {
+        cell.style.textAlign = 'right';
+    });
     
     // Create a temporary bill footer
     const tempFooter = document.createElement('div');
     tempFooter.className = 'print-only-footer';
     tempFooter.innerHTML = `
-        <p style="text-align: center; font-size: 12px; margin-top: 20px; border-top: 1px dashed #000; padding-top: 10px;">Thank you for dining with us!</p>
-        <p style="text-align: center; font-size: 10px;">Visit us again soon!</p>
+        <div style="margin-top: 30px; border-top: 1px dashed #000; padding-top: 10px; text-align: center;">
+            <p style="font-size: 14px; margin: 5px 0; font-weight: bold;">Thank you for dining with us!</p>
+            <p style="font-size: 12px; margin: 5px 0;">Visit us again soon!</p>
+            <p style="font-size: 10px; margin-top: 15px;">This is a computer-generated bill and does not require a signature.</p>
+        </div>
     `;
     
     // Temporarily append header and footer to the bill container
@@ -557,9 +595,39 @@ function printBill() {
         // Restore the original state
         document.title = originalTitle;
         billDateElement.innerHTML = originalDateContent;
+        
+        // If thead was added, remove it
+        const addedThead = billTable.querySelector('thead');
+        if (addedThead) {
+            billTable.removeChild(addedThead);
+        }
+        
+        // Restore the quantity cells
+        const restoredQuantityCells = billTable.querySelectorAll('.quantity-controls');
+        restoredQuantityCells.forEach((cell, index) => {
+            const quantity = cell.textContent;
+            cell.innerHTML = `
+                <button class="qty-btn decrease-btn">-</button>
+                <span class="item-quantity">${quantity}</span>
+                <button class="qty-btn increase-btn">+</button>
+            `;
+            
+            // Reattach event listeners
+            const decreaseBtn = cell.querySelector('.decrease-btn');
+            const increaseBtn = cell.querySelector('.increase-btn');
+            
+            decreaseBtn.addEventListener('click', () => updateItemQuantity(index, -1));
+            increaseBtn.addEventListener('click', () => updateItemQuantity(index, 1));
+        });
+        
+        // Reset total cell styles
+        totalCells.forEach(cell => {
+            cell.style.textAlign = '';
+        });
+        
         billContainer.removeChild(tempHeader);
         billContainer.removeChild(tempFooter);
-    }, 100);
+    }, 200);
 }
 
 // Download bill as PDF

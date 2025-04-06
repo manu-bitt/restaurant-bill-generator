@@ -703,33 +703,48 @@ tr:hover {
 
 /* Add print styles at the end of the CSS file */
 @media print {
+    /* Reset the page margins and background */
+    @page {
+        margin: 0.5cm;
+        size: auto;
+    }
+    
+    body {
+        background: white;
+        font-size: 12pt;
+    }
+    
     /* Hide elements not needed for printing */
     .menu-container,
     .menu-header,
     .manage-menu-btn,
     .bill-actions,
     .dialog-overlay,
-    .search-input {
+    .search-input,
+    .app-footer {
         display: none !important;
     }
     
     /* Show the bill content */
     .app-content {
         display: block !important;
+        grid-template-columns: 1fr;
     }
     
     /* Reset layout for printing */
     .app-container {
         max-width: 100%;
-        padding: 0;
+        padding: 10px;
         margin: 0;
+        box-shadow: none;
     }
     
     /* Center the bill title */
     .app-title {
         text-align: center;
-        font-size: 24px;
+        font-size: 18pt;
         margin-bottom: 10px;
+        color: black;
     }
     
     /* Format the bill container for printing */
@@ -739,14 +754,15 @@ tr:hover {
         padding: 0;
         width: 100%;
         margin: 0 auto;
-        max-width: 500px;
+        max-width: 100%;
+        background: white;
     }
     
     /* Format the bill date */
     #bill-date {
         text-align: center;
         margin-bottom: 20px;
-        font-size: 14px;
+        font-size: 10pt;
     }
     
     /* Add a separator line */
@@ -761,18 +777,32 @@ tr:hover {
     .bill-table {
         margin: 20px 0;
         width: 100%;
-        max-height: none;
-        overflow: visible;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+    
+    /* Make sure the table rows show properly */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    tr {
+        page-break-inside: avoid;
     }
     
     /* Hide delete buttons */
     .delete-btn {
-        display: none;
+        display: none !important;
     }
     
     /* Hide quantity controls, just show the quantity number */
     .quantity-controls .qty-btn {
-        display: none;
+        display: none !important;
+    }
+    
+    .item-quantity {
+        font-weight: bold;
     }
     
     /* Format the bill summary for printing */
@@ -783,10 +813,11 @@ tr:hover {
         background-color: transparent;
     }
     
-    /* Make sure the table rows show properly */
+    /* Make sure the table cells show properly */
     th, td {
         padding: 8px;
         text-align: left;
+        color: black;
     }
     
     /* Show the print header */
@@ -796,9 +827,10 @@ tr:hover {
         text-align: center;
     }
     
-    /* Hide footer when printing */
-    .app-footer {
-        display: none !important;
+    /* Make sure the total is bold */
+    .summary-row.total {
+        font-weight: bold;
+        font-size: 14pt;
     }
 }
 
