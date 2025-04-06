@@ -412,6 +412,9 @@ function printBill() {
     const tempHeader = document.createElement('div');
     tempHeader.className = 'print-only-header';
     tempHeader.innerHTML = `
+        <p style="text-align: center; font-size: 18px; margin: 5px 0; font-weight: bold;">Restaurant Bill</p>
+        <p style="text-align: center; font-size: 12px; margin: 5px 0;">123 Food Street, Tasty Town</p>
+        <p style="text-align: center; font-size: 12px; margin: 5px 0;">Tel: +91 98765 43210</p>
         <p style="text-align: center; font-size: 12px; margin: 5px 0;">${billNumber} | ${tableNumber}</p>
     `;
     
@@ -420,16 +423,16 @@ function printBill() {
     const originalDateContent = billDateElement.innerHTML;
     
     // Update bill date with additional info
+    const now = new Date();
     billDateElement.innerHTML = `
-        <p>${originalDateContent}</p>
-        <p style="text-align: center; font-size: 12px; margin: 5px 0;">${billNumber} | ${tableNumber}</p>
+        <p style="margin: 5px 0; text-align: center;">Date: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}</p>
     `;
     
     // Create a temporary bill footer
     const tempFooter = document.createElement('div');
     tempFooter.className = 'print-only-footer';
     tempFooter.innerHTML = `
-        <p style="text-align: center; font-size: 12px; margin-top: 20px;">Thank you for dining with us!</p>
+        <p style="text-align: center; font-size: 12px; margin-top: 20px; border-top: 1px dashed #000; padding-top: 10px;">Thank you for dining with us!</p>
         <p style="text-align: center; font-size: 10px;">Visit us again soon!</p>
     `;
     
@@ -438,17 +441,23 @@ function printBill() {
     billContainer.insertBefore(tempHeader, billContainer.firstChild);
     billContainer.appendChild(tempFooter);
     
+    // Make sure all print-only elements are visible
+    tempHeader.style.display = 'block';
+    tempFooter.style.display = 'block';
+    
     // Change document title to include bill number
-    document.title = `Bill #${Math.floor(Math.random() * 10000)}`;
+    document.title = billNumber;
     
     // Print the document
-    window.print();
-    
-    // Restore the original state
-    document.title = originalTitle;
-    billDateElement.innerHTML = originalDateContent;
-    billContainer.removeChild(tempHeader);
-    billContainer.removeChild(tempFooter);
+    setTimeout(() => {
+        window.print();
+        
+        // Restore the original state
+        document.title = originalTitle;
+        billDateElement.innerHTML = originalDateContent;
+        billContainer.removeChild(tempHeader);
+        billContainer.removeChild(tempFooter);
+    }, 100);
 }
 
 // Download bill as PDF

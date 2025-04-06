@@ -513,12 +513,16 @@ td {
     .manage-menu-btn,
     .bill-actions,
     .dialog-overlay,
-    .search-input,
-    .app-content {
+    .search-input {
         display: none !important;
     }
     
-    /* Reset grid layout for printing */
+    /* Show the bill content */
+    .app-content {
+        display: block !important;
+    }
+    
+    /* Reset layout for printing */
     .app-container {
         max-width: 100%;
         padding: 0;
@@ -561,6 +565,8 @@ td {
     .bill-table {
         margin: 20px 0;
         width: 100%;
+        max-height: none;
+        overflow: visible;
     }
     
     /* Hide delete buttons */
@@ -578,14 +584,20 @@ td {
         margin-top: 20px;
         border-top: 1px dashed #000;
         padding-top: 10px;
+        background-color: transparent;
     }
     
-    /* Show only the relevant parts of the bill */
-    body::after {
-        content: "Thank you for dining with us!";
-        display: block;
-        text-align: center;
-        margin-top: 30px;
-        font-style: italic;
+    /* Make sure the table rows show properly */
+    th, td {
+        padding: 8px;
+        text-align: left;
     }
+    
+    /* Show the print header */
+    .print-only-header,
+    .print-only-footer {
+        display: block !important;
+        text-align: center;
+    }
+} 
 } 
