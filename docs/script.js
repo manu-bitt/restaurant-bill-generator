@@ -35,6 +35,15 @@ const smallPizzaPrice = document.getElementById('smallPizzaPrice');
 const mediumPizzaPrice = document.getElementById('mediumPizzaPrice');
 const largePizzaPrice = document.getElementById('largePizzaPrice');
 
+// PWA Install Prompt
+let deferredPrompt;
+const installPrompt = document.getElementById('installPrompt');
+const installBtn = document.getElementById('installApp');
+const closePromptBtn = document.getElementById('closePrompt');
+
+// Check if user has already dismissed or installed
+const hasPromptBeenShown = localStorage.getItem('installPromptShown');
+
 // Initialize the app
 function init() {
     // Load custom menu items from localStorage if available
@@ -76,6 +85,77 @@ function init() {
     
     // Initialize pizza price inputs visibility
     togglePizzaPriceInputs();
+
+    // Handle the install prompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent Chrome 76+ from automatically showing the prompt
+        e.preventDefault();
+        // Stash the event so it can be triggered later
+        deferredPrompt = e;
+        
+        // Show the install prompt only if user hasn't dismissed or installed
+        if (!hasPromptBeenShown) {
+            installPrompt.classList.remove('hidden');
+        }
+    });
+
+    // Install button click handler
+    installBtn.addEventListener('click', () => {
+        // Hide the app provided install prompt
+        installPrompt.classList.add('hidden');
+        
+        // Show the browser install prompt
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            
+            // Wait for the user to respond to the prompt
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                } else {
+                    console.log('User dismissed the install prompt');
+                }
+                
+                // Set flag in localStorage so we don't show the prompt again
+                localStorage.setItem('installPromptShown', 'true');
+                
+                // Clear the saved prompt since it can't be used again
+                deferredPrompt = null;
+            });
+        }
+    });
+
+    // Close button click handler
+    closePromptBtn.addEventListener('click', () => {
+        installPrompt.classList.add('hidden');
+        // Set flag in localStorage so we don't show the prompt again
+        localStorage.setItem('installPromptShown', 'true');
+    });
+
+    // Check if the app is being used in standalone mode (installed PWA)
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+        // App is being used in standalone mode
+        console.log('App is installed and running in standalone mode');
+    }
+
+    // Enable offline notification
+    window.addEventListener('online', () => {
+        console.log('App is online');
+        // You could show a notification here
+    });
+
+    window.addEventListener('offline', () => {
+        console.log('App is offline');
+        // You could show a notification here
+    });
+
+    // Refresh app when new version is available
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            console.log('New version available! Refreshing...');
+            window.location.reload();
+        });
+    }
 }
 
 // Load custom menu items from localStorage
