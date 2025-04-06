@@ -1,3 +1,11 @@
+// Force refresh if service charge element is found (to ensure it's completely removed)
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.querySelector('.summary-row:has(span:contains("Service Charge"))')) {
+        // If service charge is found, force a hard refresh to get the latest version
+        window.location.reload(true);
+    }
+});
+
 // Selected bill items
 let billItems = [];
 

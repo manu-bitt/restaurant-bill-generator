@@ -7,17 +7,21 @@
     <meta name="keywords" content="restaurant, bill, generator, invoice, cafe, menu, order">
     <meta name="author" content="Restaurant Bill Generator">
     <meta name="theme-color" content="#4a6fa5">
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json?v=3">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="MG's Cafe">
-    <link rel="apple-touch-icon" href="logo192.png">
+    <link rel="apple-touch-icon" href="logo192.png?v=3">
     <title>Restaurant Bill Generator</title>
-    <link rel="icon" type="image/png" href="favicon.ico">
+    <link rel="icon" type="image/png" href="favicon.ico?v=3">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=3">
     <!-- Add base URL for GitHub Pages -->
     <base href="./">
+    <!-- Anti-caching meta tags -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
   </head>
   <body>
     <div class="app-container">
@@ -129,13 +133,17 @@
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="menuItems.js"></script>
-    <script src="script.js"></script>
+    <script src="menuItems.js?v=3"></script>
+    <script src="script.js?v=3"></script>
     <script>
-        // Register service worker
+        // Force service worker unregistration and refresh
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+                // Re-register service worker after unregistering old ones
+                navigator.serviceWorker.register('./sw.js?v=3')
                     .then(registration => {
                         console.log('ServiceWorker registration successful with scope: ', registration.scope);
                     })
@@ -143,6 +151,15 @@
                         console.log('ServiceWorker registration failed: ', err);
                     });
             });
+            
+            // Clear all caches
+            if (window.caches) {
+                caches.keys().then(function(keyList) {
+                    return Promise.all(keyList.map(function(key) {
+                        return caches.delete(key);
+                    }));
+                });
+            }
         }
     </script>
   </body>
